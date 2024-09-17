@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>log in</title>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    
+    <body class="bg-gradient-to-r from-blue-900 to-blue-700 text-white">
+        <header class="text-center py-10">
+          <nav class="space-x-">
+          </nav>
+        </header>
+      
+        <main class="flex flex-col md:flex-row justify-between items-center min-h-screen px-12">
+            <div class="text-left md:w-1/2 space-y-6">
+                <p class="text-orange-400 uppercase">Cuestionario</p>
+                <h2 class=" flex flex-row text-8xl font-bold mb-6">Honey Alonso</h2>
+                <p class="text-2xl">Averigua cómo aprendes</p>
+    
+                <div class="mt-6 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                    <a href="{{ url_for('login') }}" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded w-full md:w-auto">
+                        Iniciar Sesion
+                    </a>
+                    <a href="{{ url_for('registro') }}" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded w-full md:w-auto">
+                        Registrarse
+                    </a>
+                </div>
+            </div>
+    
+            <div class="md:w-1/2 mt-10 md:mt-0">
+                <img src="{{ url_for('static', filename='resources/HA.png') }}" class="w-auto h-auto object-cover ">
+
+            </div>
+        </main>
+      
+        <footer class="text-center py-6">
+          <p>© 2024 TESJi</p>
+        </footer>
+</body>
+</html>
