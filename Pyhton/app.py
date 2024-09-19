@@ -6,7 +6,8 @@ import base64
 import pandas as pd
 import numpy as np
 import uuid
-import pymysql 
+import pymysql
+from werkzeug.security import generate_password_hash, check_password_hash 
 
 
 #app
@@ -15,11 +16,12 @@ app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:G170122fg#@localhost/Cuest'
 db = SQLAlchemy(app)
 
+# Definición de los modelos de base de datos
 class Usuarios(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    contrasena = db.Column(db.String(255), nullable=False) 
+    contrasena = db.Column(db.String(200), nullable=False)
     fecha_registro = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 class Preguntas(db.Model):
@@ -37,38 +39,41 @@ class Respuestas(db.Model):
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     id_pregunta = db.Column(db.Integer, db.ForeignKey('preguntas.id'), nullable=False)
     id_opcion = db.Column(db.Integer, db.ForeignKey('opciones_respuesta.id'), nullable=False)
-    folio = db.Column(db.String(100), nullable=False)  # Campo de folio único
+    folio = db.Column(db.String(100), nullable=False)
 
+# Rutas de la aplicación
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/menu')
+def menu():
+    return render_template('menu.html')
 
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
     if request.method == 'POST':
         nombre = request.form.get('nombre')
-        email = request.form.get('email')
+        email = session.get('user_email')
 
-        # Crear o buscar al usuario
         usuario = Usuarios.query.filter_by(email=email).first()
         if not usuario:
             usuario = Usuarios(nombre=nombre, email=email)
             db.session.add(usuario)
             db.session.commit()
 
-        folio = str(uuid.uuid4())  # Generar un folio único
+        folio = str(uuid.uuid4())
 
-        # Guardar las respuestas
         for pregunta_id in request.form:
             if pregunta_id.startswith('pregunta_'):
                 id_pregunta = int(pregunta_id.split('_')[1])
-                id_opcion = int(request.form[pregunta_id])  # Obtener la opción seleccionada
+                id_opcion = int(request.form[pregunta_id])
 
                 respuesta = Respuestas(
                     id_usuario=usuario.id,
                     id_pregunta=id_pregunta,
                     id_opcion=id_opcion,
-                    folio=folio  # Asignar el folio a cada respuesta
+                    folio=folio
                 )
                 db.session.add(respuesta)
 
@@ -82,75 +87,96 @@ def survey():
     return render_template('survey.html', preguntas=preguntas, opciones=opciones)
 
 
+@app.route('/session', methods=['GET'])
+def sesion():
+    return render_template('login.html')
 
-@app.route('/graficar')
-def results():
-    # Calculate learning style and generate spider chart
-    return render_template('graficar.html', plot_url=generate_spider_chart())
+@app.route('/rg', methods=['GET'])
+def rg():
+    return render_template('registro.html')
 
-def generate_spider_chart():
-    # Calculate results and create spider chart
-    return plot_url
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('contrasena')
 
-@app.route('/registro', methods=['GET', 'POST'])
-def registro():
+    usuario = Usuarios.query.filter_by(email=email).first()
+
+    if usuario and check_password_hash(usuario.contrasena, password):
+        session['user_id'] = usuario.id
+        session['user_email'] = usuario.email
+        flash('Inicio de sesión exitoso')
+        return redirect(url_for('menu'))
+    else:
+        flash('Correo o contraseña incorrectos')
+        return redirect(url_for('index'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
     if request.method == 'POST':
         nombre = request.form.get('nombre')
         email = request.form.get('email')
-        contrasena = request.form.get('contrasena')  # Asegúrate de manejar la contraseña de forma segura
+        contrasena = request.form.get('contrasena')
 
-        connection = None
-        cursor = None
-        
-        try:
-            # Conectar a la base de datos
-            connection = pymysql.connect(
-                host='localhost',
-                user='root',
-                password='G170122fg#',
-                database='Cuest'
-            )
-            cursor = connection.cursor()
-            
-            # Ejecutar el procedimiento almacenado
-            cursor.callproc('insertar_usuario', (nombre, email, contrasena))
-            
-            # Confirmar los cambios
-            connection.commit()
+        contrasena_hash = generate_password_hash(contrasena, method='pbkdf2:sha256')
 
-            flash('Usuario registrado exitosamente')
-            return redirect(url_for('index'))
-        except Exception as e:
-            print(f'Error: {e}')
-            flash('Error al registrar el usuario')
-        finally:
-            # Asegúrate de cerrar el cursor y la conexión, si fueron creados
-            if cursor:
-                cursor.close()
-            if connection:
-                connection.close()
+        nuevo_usuario = Usuarios(nombre=nombre, email=email, contrasena=contrasena_hash)
+        db.session.add(nuevo_usuario)
+        db.session.commit()
 
-    return render_template('registro.html')
+        flash('Registro exitoso, ahora puedes iniciar sesión')
+        return redirect(url_for('index'))
 
-from werkzeug.security import check_password_hash
+    return render_template('registrar.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        contrasena = request.form['contrasena']
+def generate_spider_chart(categorias_respuestas):
+    labels = list(categorias_respuestas.keys())
+    values = list(categorias_respuestas.values())
 
-        usuario = Usuarios.query.filter_by(email=email).first()
+    num_vars = len(labels)
+    angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
 
-        if usuario and check_password_hash(usuario.contrasena, contrasena):
-            session['user_id'] = usuario.id
-            flash('Inicio de sesión exitoso')
-            return redirect(url_for('index'))
-        else:
-            flash('Correo o contraseña incorrectos.')
+    values += values[:1]
+    angles += angles[:1]
 
-    return render_template('login.html')
+    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+    ax.fill(angles, values, color='red', alpha=0.25)
+    ax.plot(angles, values, color='red', linewidth=2)
 
+    ax.set_yticklabels([])
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(labels)
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    img_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    buf.close()
+
+    plt.close(fig)
+
+    return f"data:image/png;base64,{img_base64}"
+
+@app.route('/graficar')
+def graficar():
+    user_id = session.get('user_id')
+    if user_id is None:
+        flash('Debes iniciar sesión para ver esta página')
+        return redirect(url_for('index'))
+
+    respuestas = Respuestas.query.filter_by(id_usuario=user_id).all()
+
+    pregunta_ids = set(respuesta.id_pregunta for respuesta in respuestas)
+    categorias = Preguntas.query.filter(Preguntas.id.in_(pregunta_ids)).all()
+    
+    categorias_respuestas = {categoria: 0 for categoria in ['Activo', 'Reflexivo', 'Teórico', 'Pragmático']}
+    
+    for respuesta in respuestas:
+        pregunta = db.session.get(Preguntas, respuesta.id_pregunta)
+        categorias_respuestas[pregunta.categoria] += 1
+
+    plot_url = generate_spider_chart(categorias_respuestas) 
+    return render_template('resul.html', plot_url=plot_url)
 
 if __name__ == '__main__':
     app.run(debug=True)
