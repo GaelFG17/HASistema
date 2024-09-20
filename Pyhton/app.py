@@ -1,19 +1,19 @@
+import matplotlib
+matplotlib.use('Agg')  # Este backend es adecuado para generar gráficos en servidores sin GUI
+import matplotlib.pyplot as plt
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
-import matplotlib.pyplot as plt
 import io
 import base64
 import pandas as pd
 import numpy as np
 import uuid
-import pymysql
-from werkzeug.security import generate_password_hash, check_password_hash 
+from werkzeug.security import generate_password_hash, check_password_hash
 
-
-#app
+# Configuración de la aplicación
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:G170122fg#@localhost/Cuest'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:mysql123@localhost/Encuestas'
 db = SQLAlchemy(app)
 
 # Definición de los modelos de base de datos
@@ -50,17 +50,21 @@ def index():
 def menu():
     return render_template('menu.html')
 
+@app.route('/lg')
+def lg():
+    return render_template('login.html')
+
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
     if request.method == 'POST':
-        nombre = request.form.get('nombre')
         email = session.get('user_email')
 
         usuario = Usuarios.query.filter_by(email=email).first()
-        if not usuario:
-            usuario = Usuarios(nombre=nombre, email=email)
-            db.session.add(usuario)
-            db.session.commit()
+
+        # Verificar si el usuario ya ha respondido
+        if Respuestas.query.filter_by(id_usuario=usuario.id).first():
+            flash('Ya has respondido a este cuestionario.')
+            return redirect(url_for('index'))
 
         folio = str(uuid.uuid4())
 
@@ -86,14 +90,6 @@ def survey():
     opciones = OpcionesRespuesta.query.all()
     return render_template('survey.html', preguntas=preguntas, opciones=opciones)
 
-
-@app.route('/session', methods=['GET'])
-def sesion():
-    return render_template('login.html')
-
-@app.route('/rg', methods=['GET'])
-def rg():
-    return render_template('registro.html')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -158,7 +154,7 @@ def generate_spider_chart(categorias_respuestas):
     return f"data:image/png;base64,{img_base64}"
 
 @app.route('/graficar')
-def graficar():
+def results():
     user_id = session.get('user_id')
     if user_id is None:
         flash('Debes iniciar sesión para ver esta página')
