@@ -3,42 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>log in</title>
+    <title>Log In</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gradient-to-r from-blue-900 to-blue-700 text-white relative">
     
-    <body class="bg-gradient-to-r from-blue-900 to-blue-700 text-white">
-        <header class="text-center py-10">
-          <nav class="space-x-">
-          </nav>
-        </header>
-      
-        <main class="flex flex-col md:flex-row justify-between items-center min-h-screen px-12">
-            <div class="text-left md:w-1/2 space-y-6">
-                <p class="text-orange-400 uppercase">Cuestionario</p>
-                <h2 class=" flex flex-row text-8xl font-bold mb-6">Honey Alonso</h2>
-                <p class="text-2xl">Averigua cómo aprendes</p>
+    <div class="absolute inset-0 z-0 pointer-events-none">
+        <div id="blob1" class="blob bg-gradient-to-r from-orange-400 to-pink-500 opacity-30 rounded-full w-48 h-48 blur-3xl absolute top-10 left-10"></div>
+        <div id="blob2" class="blob bg-gradient-to-r from-purple-400 to-indigo-500 opacity-30 rounded-full w-40 h-40 blur-3xl absolute top-40 right-10"></div>
+        <div id="blob3" class="blob bg-gradient-to-r from-green-400 to-teal-500 opacity-30 rounded-full w-52 h-52 blur-3xl absolute bottom-10 left-40"></div>
+        <div id="blob4" class="blob bg-gradient-to-r from-pink-400 to-indigo-500 opacity-30 rounded-full w-44 h-44 blur-3xl absolute top-20 right-40"></div>
+        <div id="blob5" class="blob bg-gradient-to-r from-blue-400 to-teal-500 opacity-30 rounded-full w-56 h-56 blur-3xl absolute bottom-20 right-20"></div>
+        <div id="blob6" class="blob bg-gradient-to-r from-yellow-400 to-red-500 opacity-30 rounded-full w-40 h-40 blur-3xl absolute top-30 left-60"></div>
+        <div id="blob7" class="blob bg-gradient-to-r from-cyan-400 to-purple-500 opacity-30 rounded-full w-48 h-48 blur-3xl absolute bottom-20 right-60"></div>
+        <div id="blob8" class="blob bg-gradient-to-r from-red-400 to-yellow-500 opacity-30 rounded-full w-44 h-44 blur-3xl absolute top-70 left-30"></div>
+        <div id="blob9" class="blob bg-gradient-to-r from-green-400 to-blue-500 opacity-30 rounded-full w-50 h-50 blur-3xl absolute top-50 right-30"></div>
+        <div id="blob10" class="blob bg-gradient-to-r from-purple-400 to-orange-500 opacity-30 rounded-full w-46 h-46 blur-3xl absolute bottom-40 left-80"></div>
+    </div>
     
-                <div class="mt-6 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-                    <a href="{{ url_for('sesion') }}" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded w-full md:w-auto">
-                        Iniciar Sesion
-                    </a>
-                    <a href="{{ url_for('rg') }}" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded w-full md:w-auto">
-                        Registrarse
-                    </a>
-                </div>
-            </div>
-    
-            <div class="md:w-1/2 mt-10 md:mt-0">
-                <img src="{{ url_for('static', filename='resources/HA.png') }}" class="w-auto h-auto object-cover ">
 
+    <header class="text-center py-10 relative z-10">
+      <nav class="space-x-">
+      </nav>
+    </header>
+  
+    <main class="flex flex-col md:flex-row justify-between items-center min-h-screen px-32 relative z-10">
+        <div class="text-left md:w-1/2 space-y-6">
+            <p class="text-orange-400 uppercase">Cuestionario</p>
+            <h2 class="flex flex-row text-8xl font-bold mb-6">Honey Alonso</h2>
+            <p class="text-2xl">Averigua cómo aprendes</p>
+
+            <div class="mt-6 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                <a href="{{ url_for('sesion') }}" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded w-full md:w-auto">
+                    Iniciar Sesión
+                </a>
+                <a href="{{ url_for('rg') }}" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded w-full md:w-auto">
+                    Registrarse
+                </a>
             </div>
-        </main>
-      
-        <footer class="text-center py-6">
-          <p>© 2024 TESJi</p>
-        </footer>
+        </div>
+
+        <div class="md:w-1/2 mt-10 md:mt-12 flex justify-end">
+            <img src="{{ url_for('static', filename='resources/HA.png') }}" class="w-auto h-auto object-cover">
+        </div>
+    </main>
+
+    <footer class="text-center py-6 relative z-10">
+      <p>© 2024 TESJi</p>
+    </footer>
+
 </body>
 </html>

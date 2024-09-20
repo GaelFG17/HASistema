@@ -3,10 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <title>Inicio</title>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
 </head>
-<body>
-    <h1>Bienvenido</h1>
-    <a href="{{ url_for('survey') }}">Iniciar Encuesta</a>
-    <a href="{{ url_for('graficar') }}">Ver Grafica</a>
+<div class="absolute inset-0 z-0 pointer-events-none"></div>
+    <div id="blob1" class="blob bg-gradient-to-r from-orange-400 to-pink-500 opacity-30 rounded-full w-48 h-48 blur-3xl absolute top-10 left-10"></div>
+    <div id="blob2" class="blob bg-gradient-to-r from-purple-400 to-indigo-500 opacity-30 rounded-full w-40 h-40 blur-3xl absolute top-40 right-10"></div>
+    <div id="blob3" class="blob bg-gradient-to-r from-green-400 to-teal-500 opacity-30 rounded-full w-52 h-52 blur-3xl absolute bottom-10 left-40"></div>
+    <div id="blob4" class="blob bg-gradient-to-r from-pink-400 to-indigo-500 opacity-30 rounded-full w-44 h-44 blur-3xl absolute top-20 right-40"></div>
+    <div id="blob5" class="blob bg-gradient-to-r from-blue-400 to-teal-500 opacity-30 rounded-full w-56 h-56 blur-3xl absolute bottom-20 right-20"></div>
+    <div id="blob6" class="blob bg-gradient-to-r from-yellow-400 to-red-500 opacity-30 rounded-full w-40 h-40 blur-3xl absolute top-30 left-60"></div>
+    <div id="blob7" class="blob bg-gradient-to-r from-cyan-400 to-purple-500 opacity-30 rounded-full w-48 h-48 blur-3xl absolute bottom-20 right-60"></div>
+    <div id="blob8" class="blob bg-gradient-to-r from-red-400 to-yellow-500 opacity-30 rounded-full w-44 h-44 blur-3xl absolute top-70 left-30"></div>
+    <div id="blob9" class="blob bg-gradient-to-r from-green-400 to-blue-500 opacity-30 rounded-full w-50 h-50 blur-3xl absolute top-50 right-30"></div>
+    <div id="blob10" class="blob bg-gradient-to-r from-purple-400 to-orange-500 opacity-30 rounded-full w-46 h-46 blur-3xl absolute bottom-40 left-80"></div>
+</div>
+<body class="bg-gradient-to-r from-blue-900 to-blue-700 text-white">
+    <div class="text-center mt-20 relative z-10">
+        <a href="{{ url_for('survey') }}" class="btn-53 inline-block">
+            <div class="original">Iniciar Encuesta</div>
+            <div class="letters">
+                <span>I</span>
+                <span>R</span>
+                <span>&nbsp;</span>
+                <span>A</span>
+                <span>&nbsp;</span>
+                <span>E</span>
+                <span>N</span>
+                <span>C</span>
+                <span>U</span>
+                <span>E</span>
+                <span>S</span>
+                <span>T</span>
+                <span>A</span>
+            </div>
+        </a>
+        <a href="{{ url_for('graficar') }}" class="btn-53 mt-64 inline-block">
+            <div class="original">Ver Gráfica</div>
+            <div class="letters">
+                <span>V</span>
+                <span>E</span>
+                <span>R</span>
+                <span>&nbsp;</span>
+                <span>G</span>
+                <span>R</span>
+                <span>A</span>
+                <span>F</span>
+                <span>I</span>
+                <span>C</span>
+                <span>A</span>
+            </div>
+        </a>
+    </div>
+
+    <footer class="text-center py-64">
+        <p>© 2024 TESJi</p>
+    </footer>
 </body>
 </html>

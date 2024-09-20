@@ -3,6 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Encuesta</title>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <div class="absolute inset-0 z-0 pointer-events-none"></div>
+    <div id="blob1" class="blob bg-gradient-to-r from-orange-400 to-pink-500 opacity-30 rounded-full w-48 h-48 blur-3xl absolute top-10 left-10"></div>
+    <div id="blob2" class="blob bg-gradient-to-r from-purple-400 to-indigo-500 opacity-30 rounded-full w-40 h-40 blur-3xl absolute top-40 right-10"></div>
+    <div id="blob3" class="blob bg-gradient-to-r from-green-400 to-teal-500 opacity-30 rounded-full w-52 h-52 blur-3xl absolute bottom-10 left-40"></div>
+    <div id="blob4" class="blob bg-gradient-to-r from-pink-400 to-indigo-500 opacity-30 rounded-full w-44 h-44 blur-3xl absolute top-20 right-40"></div>
+    <div id="blob5" class="blob bg-gradient-to-r from-blue-400 to-teal-500 opacity-30 rounded-full w-56 h-56 blur-3xl absolute bottom-20 right-20"></div>
+    <div id="blob6" class="blob bg-gradient-to-r from-yellow-400 to-red-500 opacity-30 rounded-full w-40 h-40 blur-3xl absolute top-30 left-60"></div>
+    <div id="blob7" class="blob bg-gradient-to-r from-cyan-400 to-purple-500 opacity-30 rounded-full w-48 h-48 blur-3xl absolute bottom-20 right-60"></div>
+    <div id="blob8" class="blob bg-gradient-to-r from-red-400 to-yellow-500 opacity-30 rounded-full w-44 h-44 blur-3xl absolute top-70 left-30"></div>
+    <div id="blob9" class="blob bg-gradient-to-r from-green-400 to-blue-500 opacity-30 rounded-full w-50 h-50 blur-3xl absolute top-50 right-30"></div>
+    <div id="blob10" class="blob bg-gradient-to-r from-purple-400 to-orange-500 opacity-30 rounded-full w-46 h-46 blur-3xl absolute bottom-40 left-80"></div>
+</div>
+
     <script>
         let currentQuestionIndex = 0;
 
@@ -31,22 +46,31 @@
         });
     </script>
 </head>
-<body>
-    <form method="POST" action="/survey">
+<body class="bg-gradient-to-r from-blue-900 to-blue-700 text-white">
+    <form method="POST" action="/survey" class="max-w-lg mx-auto mt-32">
         {% for pregunta in preguntas %}
-            <div class="question" style="display: none;">
-                <h2>{{ pregunta.texto }}</h2>
+            <div class="question bg-white text-black rounded-lg shadow-lg p-6 mb-6" style="display: none;">
+                <h2 class="text-xl font-semibold mb-4">{{ pregunta.texto }}</h2>
                 {% for opcion in opciones %}
-                    <label>
-                        <input type="radio" name="pregunta_{{ pregunta.id }}" value="{{ opcion.id }}">
+                    <label class="block mb-2">
+                        <input type="radio" name="pregunta_{{ pregunta.id }}" value="{{ opcion.id }}" class="mr-2">
                         {{ opcion.texto }}
-                    </label><br>
+                    </label>
                 {% endfor %}
+                
+                <div class="flex justify-between mt-4">
+                    <button type="button" onclick="prevQuestion()" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">Anterior</button>
+                    <button type="button" onclick="nextQuestion()" class="bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Siguiente</button>
+                </div>
             </div>
         {% endfor %}
-        <button type="button" onclick="prevQuestion()">Anterior</button>
-        <button type="button" onclick="nextQuestion()">Siguiente</button>
-        <input type="submit" value="Enviar">
-    </form>    
+        
+        <input type="submit" value="Enviar" class="mt-4 bg-green-700 hover:bg-green-600 text-white font-bold py-2 px-4 rounded w-full">
+    </form>   
+    
+    <footer class="text-center py-64">
+        <p>© 2024 TESJi</p>
+    </footer>
 </body>
+
 </html>
